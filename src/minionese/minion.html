@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../output.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../res/favicon.ico">
+    <title>Minionese</title>
+</head>
+<body>
+    <main class="grid mt-24 mb-5">
+        <a href="../home.html">
+            <button class="absolute ml-5 px-2 bg-gray-300 hover:bg-gray-200 -mt-20 border-[1.5px]">back</button>
+        </a>
+        <header class="m-auto flex">
+            <h1>This was a small independent research project I presented at 
+                <a href="https://yunkimemory.notion.site/Emory-Undergraduate-Linguistics-Conference-EULC-80ddbeb63be842a684761ffcee07f983">
+                    <span class="underline">Emory Undergraduate Linguistics Conference 6</span>
+                </a>
+            </h1>
+        </header>
+        <h1 class="m-auto mt-20">Process</h1>
+        <section class="m-auto mt-4 md:w-1/2 px-1">
+            <p>The idea for this project started with a question I asked during a presentation from computational linguist Eleanor Chodroff.
+                While presenting her research on cross-linguistic phonetic analysis, a crucial part of the process involved orthographic transcription.
+                I was curious on how this process worked for unwritten languages. Last summer, I was interested in modeling the fictional language from the
+                Minions, which is an unwritten nonsense language. I was inspired by all of this to do speech processing of nonsensical language to create
+                a pipeline that could allow for phonetic analysis on low resource language from distribution alone, seperate from meaning and transcription.
+            </p>
+        </section>
+        <h1 class="m-auto mt-14">Data</h1>
+        <section class="m-auto mt-4 md:w-1/2 px-1">
+            <p>
+                I gathered some short clips from various Minions media, then I did a phone level transcription of a small training set. e.g
+                <audio controls class="mt-5">
+                    <source src="../../res/17.wav" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <div class="ml-4 mt-5 mb-5 bg-gray-300 px-2 w-fit">
+                    <code>
+                        b a t a b u m
+                    </code>
+                </div>
+                Using the training set, I finetuned 
+                <a href="https://github.com/xinjli/allosaurus/blob/master/README.md">
+                    <span class="italic underline">Allosaurus</span>
+                </a>
+                to recognize the remaining Minionese clips. Here is a comparison
+                between my finetuned model and the default <span class="italic">Allosaurus</span> one.
+                <audio controls class="mt-5">
+                    <source src="../../res/mam2.wav" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <div class="ml-4 mt-5 mb-5 bg-gray-300 px-2 w-fit">
+                    <code>
+                          "mam2": {
+                                <br>
+                                "minionese": "m a k u",
+                                <br>
+                                "standard": "a ʔ t͡ɕ ɨ s̪"
+                                <br>
+                            },
+                    </code>
+                </div>
+                Not 100% accurate, but much more accurate sound profile of the clip, which is useful for phonetic analysis.
+            </p>
+        </section>
+        <h1 class="m-auto mt-14">Analysis</h1>
+        <section class="m-auto mt-4 md:w-1/2 px-1">
+            <p> To make meaning of the data, I used an approach by 
+                <a href="https://www.cambridge.org/core/journals/phonology/article/an-algorithm-for-learning-phonological-classes-from-distributional-similarity/F6F352349A2EBF7F8CF789D75F54576A">
+                    <span class="underline">Connor Mayer</span>
+                </a>
+                . In short, the approach required representing the phonology space as a co-occurance matrix where each column
+                is a sound and every dimension is a new context where the sound occurs. Instead of using just raw counts, the columns
+                in the matrix were normalized according using positive pointwise mutual information, which essentially weights the vectors
+                by asking the question 
+                <span class="italic">
+                    "do these sounds co-occur more than if they were isolated?"
+                </span>
+                . 
+                <br> <br>Afterwords, I used principal component analysis along side k-means clustering to extract sounds that constitute a discovered class.
+                The idea was that this technique from audio alone could allow for analysis of phonetic structure without the need for a standard written script. 
+                There are many limitations to this approach for applying it to natrual language. The first being that Minionese, while being nonsensical, still takes
+                heavy inspiration and loans a lot of words from the most popular spoken languages in the world. Low resource languages may have uncommon features compared
+                to those that make up minionese.
+
+                <br><br>
+                Regardless, the results were satisfactory. From nonsensical audio input, the algorithm was able to recover the natrual disticntion of 
+                conosonats and vowels as well as hint at other structre among sounds in Minionese, much like the small toy langauge examined by Mayer.
+                <img src="../../res/clusters.png" class="mt-5"> 
+            </p>
+        </section>
+    </main>
+</body>
+</html>
